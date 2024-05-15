@@ -12,9 +12,12 @@ env = rlcard.make('no-limit-holdem')
 
 human_agent = HumanAgent(env.num_actions)
 human_agent2 = HumanAgent(env.num_actions)
-# random_agent = RandomAgent(num_actions=env.num_actions)
+random_agent = RandomAgent(num_actions=env.num_actions)
 
-env.set_agents([human_agent, human_agent2])
+env.set_agents([human_agent, random_agent])
+
+my_player_id = 0
+human_agent.set_player_id(my_player_id)
 
 
 while (True):
@@ -38,6 +41,9 @@ while (True):
     print('===============     Cards all Players    ===============')
     for hands in env.get_perfect_information()['hand_cards']:
         print_card(hands)
+        
+    print('\n=============== Community Card ===============')
+    print_card(state['public_cards'])
 
     print('===============     Result     ===============')
     if payoffs[0] > 0:

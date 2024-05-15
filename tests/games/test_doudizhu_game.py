@@ -10,17 +10,20 @@ from rlcard.games.doudizhu.judger import DoudizhuJudger as Judger
 
 class TestDoudizhuGame(unittest.TestCase):
 
-    def test_get_num_players(self):
+    def test_get_num_players(self): # the number of players must be 3
         game = Game()
         num_players = game.get_num_players()
         self.assertEqual(num_players, 3)
 
-    def test_get_num_actions(self):
+    def test_get_num_actions(self): # the number of actions must be 27472
         game = Game()
         num_actions = game.get_num_actions()
         self.assertEqual(num_actions, 27472)
 
-    def test_init_game(self):
+    def test_init_game(self): 
+        # when a Game is initialized, the state must be a dict with 3 keys:
+        # 'self', 'current_hand', 'others_hand'
+        # current player is randomly chosen landlord
         game = Game()
         state, current_player = game.init_game()
         total_cards = list(state['current_hand'] + state['others_hand'])

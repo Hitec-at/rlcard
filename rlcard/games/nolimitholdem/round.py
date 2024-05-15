@@ -121,7 +121,7 @@ class NolimitholdemRound:
         while players[self.game_pointer].status == PlayerStatus.FOLDED:
             self.game_pointer = (self.game_pointer + 1) % self.num_players
 
-        return self.game_pointer
+        return self.game_pointer, max(self.raised)
 
     def get_nolimit_legal_actions(self, players):
         """

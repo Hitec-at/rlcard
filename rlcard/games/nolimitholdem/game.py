@@ -143,7 +143,7 @@ class NolimitholdemGame(Game):
             self.history.append((r, b, r_c, d, p, ps))
 
         # Then we proceed to the next round
-        self.game_pointer = self.round.proceed_round(self.players, action)
+        self.game_pointer, last_raised_bet = self.round.proceed_round(self.players, action)
 
         players_in_bypass = [1 if player.status in (PlayerStatus.FOLDED, PlayerStatus.ALLIN) else 0 for player in self.players]
         if self.num_players - sum(players_in_bypass) == 1:
@@ -184,7 +184,8 @@ class NolimitholdemGame(Game):
             self.round.start_new_round(self.game_pointer)
 
         state = self.get_state(self.game_pointer)
-
+        state['last_raised_bet'] = last_raised_bet
+        
         return state, self.game_pointer
 
     def get_state(self, player_id):

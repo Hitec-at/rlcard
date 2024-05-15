@@ -1,4 +1,5 @@
 from rlcard.utils.utils import print_card
+from rlcard.games.nolimitholdem import Action
 
 
 class HumanAgent(object):
@@ -11,11 +12,11 @@ class HumanAgent(object):
         Args:
             num_actions (int): the size of the ouput action space
         '''
+        self.player_id = None
         self.use_raw = True
         self.num_actions = num_actions
 
-    @staticmethod
-    def step(state):
+    def step(self, state):
         ''' Human agent will display the state and make decisions through interfaces
 
         Args:
@@ -24,7 +25,7 @@ class HumanAgent(object):
         Returns:
             action (int): The action decided by human
         '''
-        _print_state(state['raw_obs'], state['action_record'])
+        _print_state(state['raw_obs'], self.player_id, state['action_record'])
         action = int(input('>> You choose action (integer): '))
         while action < 0 or action >= len(state['legal_actions']):
             print('Action illegal...')
@@ -41,8 +42,11 @@ class HumanAgent(object):
             action (int): the action predicted (randomly chosen) by the random agent
         '''
         return self.step(state), {}
+    
+    def set_player_id(self, id):
+        self.player_id = id
 
-def _print_state(state, action_record):
+def _print_state(state, my_player_id, action_record):
     ''' Print out the state
 
     Args:
@@ -60,14 +64,15 @@ def _print_state(state, action_record):
     print('\n=============== Community Card ===============')
     print_card(state['public_cards'])
 
-    print('=============  Player',state["current_player"],'- Hand   =============')
+    print('=============  My (Player ',state["current_player"],')- Hand   =============')
     print_card(state['hand'])
 
     print('===============     Chips      ===============')
     print('In Pot:',state["pot"])
-    print('Remaining:',state["stakes"])
+    print('Last Raised Bet:', state["last_raised_bet"]) if 'last_raised_bet' in state else 'Last Raised Bet: Unknown'
+    print('My Stack-in-Pot:', state["all_chips"][my_player_id], 'Opponent Stack-in-Pot:', state["all_chips"][1-my_player_id])
+    print('My Stack:', state["stakes"][my_player_id], 'Opponent stack:', state["stakes"][1-my_player_id])
+    print('SPR:', state["stakes"][my_player_id] / state["pot"])
 
     print('\n=========== Actions You Can Choose ===========')
     print(', '.join([str(index) + ': ' + str(action) for index, action in enumerate(state['legal_actions'])]))
-    print('')
-    print(state)
