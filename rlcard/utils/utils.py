@@ -249,7 +249,7 @@ def plot_curve(csv_path, save_path, algorithm):
 
         fig.savefig(save_path)
 
-def print_doudizhu_state(state, action_chosen, mask_hand_players: list=[]):
+def print_doudizhu_state(state, action_chosen, mask_hand_players: list=[], debug=False):
     ''' (Only for usages of game Doudizhu) Given player state and chosen action and print
 
     Args:
@@ -312,9 +312,10 @@ def print_doudizhu_state(state, action_chosen, mask_hand_players: list=[]):
             print('  -----------------------------------------------------------')
         print(player_info, last_round_action, hand)
         idx += 1
-        
-    print(f'\n============= Raw State =============\n')
-    print(state)
+    
+    if debug:    
+        print(f'\n============= Raw State =============\n')
+        print(state)
         
 
 def _align_string_list(l):

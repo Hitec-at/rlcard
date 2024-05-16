@@ -31,13 +31,12 @@ while (True):
     trajectories, payoffs = env.run(is_training=False)
     
     print("\n>> Game Over!\n")
-
-    print('\n===============     Result     ===============\n')
     for i in range(env.num_players):
-        if i == my_player_id and payoffs[i] > 0:
-            print('\n===============     You Win!     ===============\n')
-        else:
-            print('\n===============     You Lose!     ===============\n')
+        if i == my_player_id:
+            if payoffs[i] > 0:
+                print('\n===============     You Win!     ===============\n')
+            else:
+                print('\n===============     You Lose!     ===============\n')
         print('Player {} gets {} points'.format(i, payoffs[i]))
 
     input("\n\nPress any key to continue...\n\n")

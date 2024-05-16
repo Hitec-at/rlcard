@@ -71,6 +71,11 @@ def _print_state(state, player_id):
     print(state['current_hand'])
 
 def _action_format(action: str) -> str:
+    if len(action) == 0:
+        return action
+    if action == 'pass' or action == 'p':
+        return 'pass'
+    
     action = action.upper()
     temp_action_list = list(action)
     temp_action_list.sort(key=functools.cmp_to_key(doudizhu_sort_str))
