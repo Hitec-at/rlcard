@@ -7,7 +7,7 @@ class RandomAgent(object):
     ''' A random agent. Random agents is for running toy examples on the card games
     '''
 
-    def __init__(self, num_actions):
+    def __init__(self, num_actions, game='doudizhu', human_player_ids=[]):
         ''' Initilize the random agent
 
         Args:
@@ -15,9 +15,10 @@ class RandomAgent(object):
         '''
         self.use_raw = False
         self.num_actions = num_actions
+        self.game = game
+        self.human_player_ids = human_player_ids
 
-    @staticmethod
-    def step(state):
+    def step(self, state):
         ''' Predict the action given the curent state in gerenerating training data.
 
         Args:
@@ -27,7 +28,8 @@ class RandomAgent(object):
             action (int): The action predicted (randomly chosen) by the random agent
         '''
         action = np.random.choice(list(state['legal_actions'].keys()))
-        print_doudizhu_state(state=state['raw_obs'], action_chosen=ID_2_ACTION[action])
+        if self.game == 'doudizhu':
+            print_doudizhu_state(state=state['raw_obs'], action_chosen=ID_2_ACTION[action], mask_hand_players=self.human_player_ids)
         return action
 
     def eval_step(self, state):
