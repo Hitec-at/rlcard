@@ -1,5 +1,7 @@
 import numpy as np
-
+from rlcard.utils.utils import print_card
+from rlcard.games.doudizhu.utils import ID_2_ACTION
+from rlcard.utils.utils import print_doudizhu_state
 
 class RandomAgent(object):
     ''' A random agent. Random agents is for running toy examples on the card games
@@ -24,7 +26,9 @@ class RandomAgent(object):
         Returns:
             action (int): The action predicted (randomly chosen) by the random agent
         '''
-        return np.random.choice(list(state['legal_actions'].keys()))
+        action = np.random.choice(list(state['legal_actions'].keys()))
+        print_doudizhu_state(state=state['raw_obs'], action_chosen=ID_2_ACTION[action])
+        return action
 
     def eval_step(self, state):
         ''' Predict the action given the current state for evaluation.

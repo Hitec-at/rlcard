@@ -249,3 +249,78 @@ def plot_curve(csv_path, save_path, algorithm):
 
         fig.savefig(save_path)
 
+def print_doudizhu_state(state, action_chosen):
+    ''' (Only for usages of game Doudizhu) Given player state and chosen action and print
+
+    Args:
+        state (dict): A dictionary of the raw state
+        action_chosen (str): An index pointed to the chosen action. For more infomation, please refer to `ID_2_ACTION`
+    '''                     
+    print(f'\n============= Game Round {len(state["trace"]) + 1} =============\n')
+    
+    hand_infos = []
+    for hand_info in state['players_current_hands']:
+        hand_infos.append({
+            'id': hand_info['ID'],
+            'role': hand_info['Role'],
+            'hand': hand_info['Hand'],
+            'action': action_chosen if hand_info['ID'] == state['self'] else None
+        })
+        
+    # format players info
+    players_info = []
+    for hand_info in hand_infos:
+        if state['self'] == hand_info['id']:
+            player_info = f'-> Player {hand_info["id"]} ({hand_info["role"]}): '
+        else:
+            player_info = f'   Player {hand_info["id"]} ({hand_info["role"]}): '
+        players_info.append(player_info) 
+    # entitle
+    title = '   Player Info'
+    players_info.insert(0, title)
+    
+    # format last round actions
+    last_round_actions = [f'{action}  ' for action in state['played_cards']] 
+    if len(state['trace']) > 3: # if actions are more than 3, then the last 3 actions are shown
+        for i in range(len(state['trace']) - 3, len(state['trace'])):
+            last_round_actions[state['trace'][i][0]] = f'{state["trace"][i][1]}  '
+    # entitle
+    title = 'Last Round Action   '
+    last_round_actions.insert(0, title)
+    
+    hands = []
+    for hand_info in hand_infos:
+        hand = f'{hand_info["hand"]}  '
+        hands.append(hand) 
+    # add current round action to that player
+    idx = 0
+    for hand, hand_info in zip(hands, hand_infos):
+        if state['self'] == hand_info['id']:
+            hand += f'-> {hand_info["action"]}  '
+            hands[idx] = hand
+        idx += 1
+    # entitle
+    title = 'Hand'
+    hands.insert(0, title) 
+        
+    _align_string_list(players_info)
+    _align_string_list(last_round_actions)
+    _align_string_list(hands)
+    idx = 0
+    for player_info, last_round_action, hand in zip(players_info, last_round_actions, hands):
+        if idx == 1:
+            print('  -----------------------------------------------------------')
+        print(player_info, last_round_action, hand)
+        idx += 1
+        
+
+def _align_string_list(l):
+    max_len = 0
+    for s in l:
+        if max_len < len(s):
+            max_len = len(s)
+            
+    for i, s in enumerate(l):
+        gap = max_len - len(s)
+        if gap > 0:
+            l[i] += ' ' * gap

@@ -124,6 +124,7 @@ class DoudizhuGame:
         else:
             actions = list(player.available_actions(self.round.greater_player, self.judger))
         state = player.get_state(self.round.public, others_hands, num_cards_left, actions)
+        self._set_players_current_hands(state)
 
         return state
 
@@ -167,3 +168,14 @@ class DoudizhuGame:
         player_down = self.players[(player.player_id-1) % len(self.players)]
         others_hand = merge(player_up.current_hand, player_down.current_hand, key=functools.cmp_to_key(doudizhu_sort_card))
         return cards2str(others_hand)
+
+    def _set_players_current_hands(self, state):
+        hands = []
+        for player in self.players:
+            hands.append({
+                'ID': player.player_id,
+                'Role': player.role,
+                'Hand': cards2str(player.current_hand),
+            })
+            
+        state['players_current_hands'] = hands
